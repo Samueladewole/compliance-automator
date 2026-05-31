@@ -151,7 +151,7 @@ MIT — see [LICENSE](LICENSE). Use it, fork it, deploy it for your customers. I
 ## Authors
 
 - **Mayowa A.** — CTO, CreativeMinds Development · [github.com/MayowaAdewole](#)
-- **Samuel A.** — Founder, CreativeMinds Development · [github.com/Samueladewole](https://github.com/Samueladewole)
+- **Samuel A.** — Co-founder, CreativeMinds Development · [github.com/Samueladewole](https://github.com/Samueladewole)
 
 ---
 
