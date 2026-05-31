@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  python:
+    name: Python · lint + test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install uv
+        run: pip install uv
+      - name: Create venv and install
+        run: |
+          uv venv
+          source .venv/bin/activate
+          uv pip install -e ".[dev,eval]"
+      - name: Lint
+        run: |
+          source .venv/bin/activate
+          ruff check agent/ eval/
+      - name: Type check
+        run: |
+          source .venv/bin/activate
+          mypy agent/ --install-types --non-interactive || true
+      - name: Test
+        run: |
+          source .venv/bin/activate
+          pytest -v --cov=agent --cov-report=term
+
+  terraform:
+    name: Terraform · validate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.0"
+      - name: Format check
+        run: terraform fmt -check -recursive
+      - name: Init
+        run: terraform init -backend=false
+      - name: Validate
+        run: terraform validate
+
+  cdk:
+    name: CDK · synth
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cdk
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: cdk/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Lint
+        run: npm run lint --if-present
+      - name: Synth
+        run: npx cdk synth --quiet

@@ -1,0 +1,72 @@
+[project]
+name = "compliance-automator"
+version = "0.1.0"
+description = "Open-source AI agent on Amazon Bedrock that turns regulator queries into audit-grade evidence packs"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Mayowa A.", email = "info@creativeminds.dev" },
+    { name = "Samuel A.", email = "info@creativeminds.dev" },
+]
+keywords = ["compliance", "ai", "amazon-bedrock", "strands", "ndpa", "nis2", "cbn-csat"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Security",
+]
+
+dependencies = [
+    "boto3 >= 1.34",
+    "botocore >= 1.34",
+    "pydantic >= 2.5",
+    "click >= 8.1",
+    "structlog >= 24.1",
+    "tenacity >= 8.2",
+    "aws-lambda-powertools >= 3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest >= 8.0",
+    "pytest-cov >= 4.1",
+    "pytest-asyncio >= 0.23",
+    "ruff >= 0.5",
+    "mypy >= 1.10",
+    "moto[bedrock] >= 5.0",
+]
+eval = [
+    "scikit-learn >= 1.4",
+    "rich >= 13.7",
+    "weasyprint >= 60.2",
+]
+
+[project.scripts]
+compliance-automator = "agent.cli:main"
+
+[project.urls]
+Homepage = "https://creativeminds.dev"
+Repository = "https://github.com/Samueladewole/compliance-automator"
+"Companion Article" = "https://creativeminds.dev/blog/compliance-automator-case-study"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["agent"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["agent/tests"]
+asyncio_mode = "auto"
